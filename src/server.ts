@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 interface User {
   id: string;
-  name: string;
+  username: string;
   age: number;
   hobbies: string[];
 }
@@ -20,12 +20,41 @@ const server = http.createServer((request, response) => {
   if (request.url === '/api/users' && request.method === 'GET') {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify(users));
-  } else {
-    response.writeHead(404, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ error: 'Endpoint not found' }));
-  }  
+  } else if (request.url === '/api/users' && request.method === 'POST') {
+    let body = '';
+
+    request.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+
+    request.on('end', () => {
+      try {
+        const {username, age, hobbies} = JSON.parse(body);
+
+        if (!username || !age || !hobbies) {
+          response.writeHead(400, { 'Content-Type': 'application/json' });
+          return response.end(JSON.stringify({ error: 'Missing required fields' }));
+        }
+
+        const newUser: User = {
+          id: Math.random().toString(36).substr(2, 9),
+          username,
+          age,
+          hobbies,
+        };
+
+        users.push(newUser);
+        
+        response.writeHead(201, { 'Content-Type': 'application/json' });
+         response.end(JSON.stringify(newUser));
+      } catch (error) {
+        response.writeHead(400, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });    
+  }
 });
 
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
+  console.log(`Server is running on port ${PORT}`);
+});

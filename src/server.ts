@@ -6,7 +6,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 
-const server = http.createServer((request, response) => {
+export const server = http.createServer((request, response) => {
   console.log(`${request.method} ${request.url}`);
 
   try {

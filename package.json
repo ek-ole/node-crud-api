@@ -10,6 +10,7 @@
     "format": "prettier --write src/**/*.ts",
     "start:dev": "ts-node-dev --respawn src/server.ts",
     "start:prod": "npm run build && node dist/server.js",
+    "start:multi": "node dist/cluster.js",
     "build": "esbuild src/server.ts --bundle --platform=node --outfile=dist/server.js --external:uuid"
   },
   "repository": {

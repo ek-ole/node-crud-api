@@ -22,6 +22,7 @@ cp .env.example .env
 
 - `npm run start:dev` - development mode with hot reload
 - `npm run start:prod` - production mode
+- `npm run start:multi` - multi mode
 - `npm run build` - build project
 - `npm run lint` - run linter
 - `npm run lint:fix` - fix linting issues

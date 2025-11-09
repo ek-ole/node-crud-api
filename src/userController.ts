@@ -1,6 +1,11 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { createUser, User, users } from './user';
-import { getUserIdFromUrl, isValidUUID, parseRequestBody, UserInput } from './utils/request';
+import {
+  getUserIdFromUrl,
+  isValidUUID,
+  parseRequestBody,
+  UserInput,
+} from './utils/request';
 import { sendResponse } from './utils/response';
 
 export async function handleUsersRequest(
@@ -14,7 +19,7 @@ export async function handleUsersRequest(
       case 'GET':
         if (userId) {
           if (!isValidUUID(userId)) {
-            return sendResponse(response, 400, { error: 'Invalid user ID'})
+            return sendResponse(response, 400, { error: 'Invalid user ID' });
           }
           const user = users.find((u) => u.id === userId);
           if (!user) {
@@ -79,30 +84,32 @@ export async function handleUsersRequest(
         sendResponse(response, 200, users[userIndex]);
         break;
 
-        case 'DELETE':
-          if (!userId) {
-            return sendResponse(response, 400, { error: 'User ID is required' });
-          }
+      case 'DELETE':
+        if (!userId) {
+          return sendResponse(response, 400, { error: 'User ID is required' });
+        }
 
-          if (!isValidUUID(userId)) {
-            return sendResponse(response, 400, { error: 'Invalid user ID' });
-          }
+        if (!isValidUUID(userId)) {
+          return sendResponse(response, 400, { error: 'Invalid user ID' });
+        }
 
-          const deleteIndex = users.findIndex(u => u.id === userId);
-          if (deleteIndex === -1) {
-            return sendResponse(response, 404, {error: 'User not find'})
-          }
+        const deleteIndex = users.findIndex((u) => u.id === userId);
+        if (deleteIndex === -1) {
+          return sendResponse(response, 404, { error: 'User not find' });
+        }
 
-          users.splice(deleteIndex, 1);
-          sendResponse(response, 204, {});
-          break;
+        users.splice(deleteIndex, 1);
+        sendResponse(response, 204, {});
+        break;
 
       default:
         sendResponse(response, 404, { error: 'Endpoint not found' });
     }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error';
-    sendResponse(response, 400, { error: errorMessage });
+    if (error instanceof Error && error.message === 'Invalid JSON') {
+      sendResponse(response, 400, { error: 'Invalid JSON' });
+    } else {
+      throw error;
+    }
   }
 }

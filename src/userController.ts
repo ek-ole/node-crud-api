@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { User, users } from "./user";
+import { createUser, User, users } from "./user";
 import { getUserIdFromUrl, parseRequestBody, UserInput } from "./utils/request";
 import { sendResponse } from "./utils/response";
 
@@ -33,12 +33,7 @@ export async function handleUsersRequest(
           });
         }
 
-        const newUser: User = {
-          id: Math.random().toString(36).substr(2, 9),
-          username,
-          age,
-          hobbies,
-        };
+        const newUser = createUser(username, age, hobbies)
 
         users.push(newUser);
         sendResponse(response, 201, newUser);

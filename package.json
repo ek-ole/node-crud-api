@@ -9,7 +9,8 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
     "start:dev": "ts-node-dev --respawn src/server.ts",
-    "start:prod": "tsc && node dist/server.js"
+    "start:prod": "npm run build && node dist/server.js",
+    "build": "esbuild src/server.ts --bundle --platform=node --outfile=dist/server.js --external:uuid"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "@typescript-eslint/parser": "^8.46.3",
     "cross-env": "^10.1.0",
+    "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

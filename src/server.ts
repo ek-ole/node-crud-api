@@ -1,6 +1,15 @@
 import http from 'http';
 import dotenv from 'dotenv';
 
+interface User {
+  id: string;
+  name: string;
+  age: number;
+  hobbies: string[];
+}
+
+let users: User[] = [];
+
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
@@ -10,7 +19,7 @@ const server = http.createServer((request, response) => {
 
   if (request.url === '/api/users' && request.method === 'GET') {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ message: 'Get all users'}));
+    response.end(JSON.stringify(users));
   } else {
     response.writeHead(404, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify({ error: 'Endpoint not found' }));

@@ -1,8 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { createUser, User, users } from './user';
-import { getUserIdFromUrl, parseRequestBody, UserInput } from './utils/request';
+import { getUserIdFromUrl, isValidUUID, parseRequestBody, UserInput } from './utils/request';
 import { sendResponse } from './utils/response';
-import { error } from 'console';
 
 export async function handleUsersRequest(
   request: IncomingMessage,
@@ -14,6 +13,9 @@ export async function handleUsersRequest(
     switch (request.method) {
       case 'GET':
         if (userId) {
+          if (!isValidUUID(userId)) {
+            return sendResponse(response, 400, { error: 'Invalid user ID'})
+          }
           const user = users.find((u) => u.id === userId);
           if (!user) {
             return sendResponse(response, 404, { error: 'User not found' });
@@ -43,6 +45,10 @@ export async function handleUsersRequest(
       case 'PUT':
         if (!userId) {
           return sendResponse(response, 400, { error: 'User ID is required' });
+        }
+
+        if (!isValidUUID(userId)) {
+          return sendResponse(response, 400, { error: 'Invalid user ID' });
         }
 
         const userIndex = users.findIndex((u) => u.id === userId);
@@ -76,6 +82,10 @@ export async function handleUsersRequest(
         case 'DELETE':
           if (!userId) {
             return sendResponse(response, 400, { error: 'User ID is required' });
+          }
+
+          if (!isValidUUID(userId)) {
+            return sendResponse(response, 400, { error: 'Invalid user ID' });
           }
 
           const deleteIndex = users.findIndex(u => u.id === userId);

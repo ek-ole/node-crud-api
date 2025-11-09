@@ -1,4 +1,5 @@
 import { IncomingMessage } from 'http';
+import { validate as uuidValidate } from 'uuid';
 
 export interface UserInput {
   username: string;
@@ -31,18 +32,9 @@ export function parseRequestBody(request: IncomingMessage): Promise<UserInput> {
       }
 
       request.on('error', reject);
-
-        // if (!username || !age || !hobbies) {
-        //   response.writeHead(400, { 'Content-Type': 'application/json' });
-        //   return response.end(JSON.stringify({ error: 'Missing required fields' }));
-        // }
-
-        // const newUser: User = {
-        //   id: Math.random().toString(36).substr(2, 9),
-        //   username,
-        //   age,
-        //   hobbies,
-        // };
-
   })
 })}
+
+export function isValidUUID(id:string): boolean {
+  return uuidValidate(id);
+}

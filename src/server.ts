@@ -4,7 +4,7 @@ import { handleUsersRequest } from './userController';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.WORKER_PORT || process.env.PORT || 4000;
 
 export const server = http.createServer((request, response) => {
   console.log(`${request.method} ${request.url}`);

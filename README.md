@@ -45,3 +45,13 @@ cp .env.example .env
   hobbies: string[]    // required, can be empty array
 }
 ```
+
+## Multi Mode & Horizontal Scaling
+
+The application supports horizontal scaling with a load balancer:
+
+- `npm run start:multi` - runs the application in multi-instance mode
+- Load balancer listens on port 4000
+- 3 worker instances run on ports 4001, 4002, 4003
+- Requests are distributed using Round-robin algorithm
+- All workers share consistent data state
